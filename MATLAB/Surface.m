@@ -87,7 +87,6 @@ classdef Surface < handle
             % Join Code
             code            = join(string(code), "\n");
             
-            
         end
         
     end

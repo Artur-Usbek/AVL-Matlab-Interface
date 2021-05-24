@@ -76,6 +76,7 @@ classdef Section < handle
             
             % Join Code
             code            = join(string(code), "\n");
+            
         end
         
     end

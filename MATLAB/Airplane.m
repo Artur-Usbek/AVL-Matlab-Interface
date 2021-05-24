@@ -69,9 +69,10 @@ classdef Airplane < handle
             code{end+1}	= Surface.getCode();
         end
         
-        
         % Join Code
         code            = join(string(code), "\n");
+        
+        % Write To File
         fid = fopen(filePath, 'w');
         fprintf(fid, code);
         fclose(fid);
