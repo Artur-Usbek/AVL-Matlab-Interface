@@ -9,8 +9,8 @@ classdef RunCase < handle
        function obj = RunCase(Name, aircraft)
            obj.Name = Name;
            
-           obj.Variables.Alpha  = 0;
-           obj.Variables.Beta   = 0;
+           obj.Variables.alpha  = 0;
+           obj.Variables.beta   = 0;
            
            % Get Control Variables
            controls = {};

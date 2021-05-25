@@ -18,7 +18,7 @@ classdef ControlSurface < handle
             
             % Header
             code{end+1} = "#";
-            code{end+1} = "#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -";
+            code{end+1} = "#++++++> Control: %s <++++++";
             code{end+1} = "#";
             
            % Control Surface

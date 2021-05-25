@@ -5,8 +5,8 @@ classdef Surface < handle
         Cspace          = 1
         Nspan           = 20
         Sspace          = 1
-        YDuplicate      = 0
         Angle           = 0
+        YDuplicate
         
         X_Scale         = 1
         Y_Scale         = 1
@@ -29,12 +29,75 @@ classdef Surface < handle
             obj.Sections = [obj.Sections, Section];
         end
         
+        function plot(obj)
+            % Get Coordinates
+            LeadingEdges        = [obj.Sections.LeadingEdgeCoordinates];
+            TrailingEdges       = [obj.Sections.TrailingEdgeCoordinates];
+            
+            % Scale
+            LeadingEdges(1,:)   = obj.X_Scale .* LeadingEdges(1,:);
+            TrailingEdges(1,:)  = obj.X_Scale .* TrailingEdges(1,:);
+            LeadingEdges(2,:)   = obj.Y_Scale .* LeadingEdges(2,:);
+            TrailingEdges(2,:)  = obj.Y_Scale .* TrailingEdges(2,:);
+            LeadingEdges(3,:)   = obj.Z_Scale .* LeadingEdges(3,:);
+            TrailingEdges(3,:)  = obj.Z_Scale .* TrailingEdges(3,:);
+            
+            % Transform
+            LeadingEdges(1,:)   = LeadingEdges(1,:)     - obj.X_Translation;
+            TrailingEdges(1,:)  = TrailingEdges(1,:)    - obj.X_Translation;
+            LeadingEdges(2,:)   = LeadingEdges(2,:)     - obj.Y_Translation;
+            TrailingEdges(2,:)  = TrailingEdges(2,:)    - obj.Y_Translation;
+            LeadingEdges(3,:)   = LeadingEdges(3,:)     - obj.Z_Translation;
+            TrailingEdges(3,:)  = TrailingEdges(3,:)    - obj.Z_Translation;
+            
+            % Rotate
+            TrailingEdges   = TrailingEdges - LeadingEdges;   % recentering CoSys to LE
+            RotationMatrix  = [ cosd(obj.Angle),      0,    sind(obj.Angle);
+                                0,                    1,    0;
+                                -sind(obj.Angle),     0, 	cosd(obj.Angle)];
+            TrailingEdges   = RotationMatrix * TrailingEdges; % rotating
+            TrailingEdges   = TrailingEdges + LeadingEdges;   % recentering again to old CoSys         
+            
+            % Duplicate
+            if ~isempty(obj.YDuplicate)
+               LE_dup = LeadingEdges;
+               TE_dup = TrailingEdges;
+               
+               LE_dup(2,:) = LE_dup(2,:) - obj.YDuplicate;  % Move X-Z Plane
+               TE_dup(2,:) = TE_dup(2,:) - obj.YDuplicate;  % Move X-Z Plane
+               LE_dup(2,:) = -1*LE_dup(2,:);                % Spiegeln
+               TE_dup(2,:) = -1*TE_dup(2,:);                % Spiegeln
+               LE_dup(2,:) = LE_dup(2,:) + obj.YDuplicate;  % Move Back
+               TE_dup(2,:) = TE_dup(2,:) + obj.YDuplicate;  % Move Back
+               LE_dup      = flip(LE_dup,2);
+               TE_dup      = flip(TE_dup,2);
+               LeadingEdges = [LE_dup, LeadingEdges];
+               TrailingEdges = [TE_dup, TrailingEdges];
+               
+            end
+            % Transform Data
+            
+            % Plot Leading Edges
+            plot3(LeadingEdges(1,:), LeadingEdges(2,:), LeadingEdges(3,:), 'r', 'LineWidth', 2);
+            % PLot Trailing Edges
+            plot3(TrailingEdges(1,:), TrailingEdges(2,:), TrailingEdges(3,:), 'g', 'LineWidth', 2);
+            
+            % Plot Sections
+            for iSection = 1:size(LeadingEdges, 2)
+                Coordinates = [LeadingEdges(:, iSection), TrailingEdges(:,iSection)];
+                plot3(Coordinates(1, :), Coordinates(2, :), Coordinates(3, :), 'k', 'LineWidth', 2);
+                
+            end
+            
+        end
+        
         function code = getCode(obj)
             code        = {};
             
             % Header
             code{end+1} = "#";
-            code{end+1} = "#==============================================================";
+            header      = "#======> Surface: %s <======";
+            code{end+1} = sprintf(header, obj.Name);
             code{end+1} = "#";
             
             % Surface and Surface Name

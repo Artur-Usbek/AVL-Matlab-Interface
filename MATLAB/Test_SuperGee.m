@@ -1,11 +1,4 @@
-%% AVL Interface
-% TODO:
-%       - Add mass generator
-%       - Executor
-%       - Run File Generator
-%       - Avl File Generator
-%       - Input File Generator
-%       - General idx function for INput generation and run generatio
+%% Test SuperGee
 %
 clc;
 clear all;

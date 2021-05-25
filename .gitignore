@@ -1,8 +1,21 @@
 # Ignore Following Folders
 Test
 AVL
+Project
+Airfoil_DataBase
 
-# Ignore Following File-Extensions
+# Ignore Exe File
+*.exe
+
+# Ignore Matlab Extensions
 *.asv
+
+# Ignore Airfoil Files
+*.dat
+
+# Ignore Generated Data
 *.avl
 *.run
+*.err
+*.res
+*.inp

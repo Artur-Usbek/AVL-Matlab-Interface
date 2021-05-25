@@ -16,6 +16,12 @@ classdef Section < handle
         
     end
     
+    properties (Dependent)
+        LeadingEdgeCoordinates
+        TrailingEdgeCoordinates
+    end
+    
+    
     methods
         function obj = Section(Name, Airfoil)
             obj.Name    = Name;
@@ -26,12 +32,35 @@ classdef Section < handle
             obj.ControlSurfaces = [obj.ControlSurfaces, ControlSurface];
         end
         
+        function LE_Coord = get.LeadingEdgeCoordinates(obj)
+            LE_Coord     = [obj.X_LeadingEdge; obj.Y_LeadingEdge; obj.Z_LeadingEdge];
+        end
+        
+        function TE_Coord = get.TrailingEdgeCoordinates(obj)
+            % Move in X Dirction
+            TE_Vec = [obj.Chord; 0; 0];
+            % Rotate around y-Axis
+            RotationMatrix  = [cosd(obj.Angle),      0,  sind(obj.Angle);
+                              0,                    1,  0;
+                              -sind(obj.Angle),     0, 	cosd(obj.Angle)];
+            TE_Coord    = obj.LeadingEdgeCoordinates + RotationMatrix * TE_Vec;
+        end
+        
+        function plot(obj)
+            Coordinates = [obj.LeadingEdgeCoordinates, obj.TrailingEdgeCoordinates];
+            Coord.X = [Coordinates(1,:)];
+            Coord.Y = [Coordinates(2,:)];
+            Coord.Z = [Coordinates(3,:)];
+            plot3(Coord.X, Coord.Y, Coord.Z, 'k', 'LineWidth', 2);
+        end
+        
         function code = getCode(obj)
             code        = {};
             
             % Header
             code{end+1} = "#";
-            code{end+1} = "#--------------------------------------------------------------";
+            header      = "#------> Section: %s <------";
+            code{end+1} = sprintf(header, obj.Name);
             code{end+1} = "#";
             
             % Section Data
@@ -61,11 +90,10 @@ classdef Section < handle
             code{end+1}  = str_hash + str_Xle + str_Yle + str_Zle + str_chord + ...
                            str_angle + str_Nspan + str_Sspace;
                        
-                       
             % Airfoil
             code{end+1} = "";
             code{end+1} = "AFILE";
-            code{end+1} = obj.Airfoil;
+            code{end+1} = obj.Airfoil + ".dat";
             
             % Control Surfaces
             code{end+1} = "";
@@ -80,5 +108,6 @@ classdef Section < handle
         end
         
     end
+    
     
 end
