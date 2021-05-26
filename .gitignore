@@ -1,8 +1,9 @@
 # Ignore Following Folders
-Test
+Airfoil_DataBase
 AVL
 Project
-Airfoil_DataBase
+Scripts
+Test
 
 # Ignore Exe File
 *.exe
