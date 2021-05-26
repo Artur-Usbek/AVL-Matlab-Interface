@@ -34,6 +34,17 @@ Section_1.X_LeadingEdge = -5.04;
 Section_1.Chord         = 7.2;
 Section_1.NSpan         = 9;
 Section_1.Sspace       	= -0.75;
+aileron                 = ControlSurface("aileron");
+aileron.Gain            = -1;
+aileron.X_hinge         = 0.7;
+aileron.HingeVec(3)     = 0.11;
+aileron.SignDUp         = -1;
+Section_1.addControlSurface(aileron);
+camber                    = ControlSurface("camber");
+camber.X_hinge         = 0.7;
+camber.HingeVec(3)     = 0.11;
+Section_1.addControlSurface(camber);
+
 
 % 2. Section Definition
 Section_2               = Section("Section_2", "ag46c");
@@ -43,6 +54,8 @@ Section_2.Z_LeadingEdge = 1.75;
 Section_2.Chord         = 5.5;
 Section_2.NSpan         = 5;
 Section_2.Sspace       	= -1.25;
+Section_2.addControlSurface(aileron);
+Section_2.addControlSurface(camber);
 
 % 3. Section Definition
 Section_3               = Section("Section_3", "ag47c");
@@ -52,6 +65,8 @@ Section_3.Z_LeadingEdge = 2.380;
 Section_3.Chord         = 3.88;
 Section_3.NSpan         = 3;
 Section_3.Sspace       	= -1.25;
+Section_3.addControlSurface(aileron);
+Section_3.addControlSurface(camber);
 
 % 4. Section Definition
 Section_4               = Section("Section_4", "ag47c");
@@ -61,6 +76,8 @@ Section_4.Z_LeadingEdge = 2.510;
 Section_4.Chord         = 3.25;
 Section_4.NSpan         = 2;
 Section_4.Sspace       	= -1.25;
+Section_4.addControlSurface(aileron);
+Section_4.addControlSurface(camber);
 
 % 5. Section Definition
 Section_5               = Section("Section_5", "ag47c");
@@ -70,6 +87,8 @@ Section_5.Z_LeadingEdge = 2.55;
 Section_5.Chord         = 2.75;
 Section_5.NSpan         = 2;
 Section_5.Sspace       	= -1.3;
+Section_5.addControlSurface(aileron);
+Section_5.addControlSurface(camber);
 
 % 6. Section Definition
 Section_6               = Section("Section_6", "ag47c");
@@ -79,6 +98,8 @@ Section_6.Z_LeadingEdge = 2.58;
 Section_6.Chord         = 2.25;
 Section_6.NSpan         = 1;
 Section_6.Sspace       	= 0;
+Section_6.addControlSurface(aileron);
+Section_6.addControlSurface(camber);
 
 % Add Sections
 SuperGee_Wing.addSection(Section_1);
@@ -102,15 +123,20 @@ AVL_Anal.Aircraft = SuperGee;
 
 alphas = -10:1:10;
 betas = -10:1:10;
+cambers = -5:5:5;
 for iAlpha = 1:length(alphas)
     for jBeta = 1:length(betas)
+        for kCamber = 1:length(cambers)
         alpha = alphas(iAlpha);
         beta = betas(jBeta);
+        camber = cambers(kCamber);
         name = sprintf("Alpha%d_Beta%d", alpha, beta);
         currcase	= RunCase(name, SuperGee);
         currcase.Variables.alpha   = alpha;
         currcase.Variables.beta    = beta;
+        currcase.Variables.camber  = camber;
         AVL_Anal.addCase(currcase);
+        end
     end
 end
 
@@ -124,6 +150,7 @@ AVL_Anal.execute();
 result = AVL_Anal.loadResults();
 
 %%
+scatter3(result.Alpha, result.Beta, result.Cmtot)
 xlabel("Alpha")
 ylabel("Beta")
 zlabel("CM")

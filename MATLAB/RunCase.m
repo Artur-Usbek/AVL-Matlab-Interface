@@ -27,7 +27,7 @@ classdef RunCase < handle
            controls = unique(string(controls));
            for iControl = 1:length(controls)
                ControlName = controls(iControl);
-            obj.Variables.(ControlName) = 0;
+                obj.Variables.(ControlName) = 0;
            end
        end
        

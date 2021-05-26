@@ -18,7 +18,8 @@ classdef ControlSurface < handle
             
             % Header
             code{end+1} = "#";
-            code{end+1} = "#++++++> Control: %s <++++++";
+            header      = "#++++++> Control: %s <++++++";
+            code{end+1} = sprintf(header, obj.Name);
             code{end+1} = "#";
             
            % Control Surface
