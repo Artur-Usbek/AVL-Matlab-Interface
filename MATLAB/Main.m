@@ -1,12 +1,7 @@
 %% AVL Interface
 % TODO:
 %       - Add mass generator
-%       - Executor
-%       - Run File Generator
-%       - Avl File Generator
-%       - Input File Generator
-%       - General idx function for INput generation and run generatio
-%       - Break down fileManager
+
 clc;
 clear all;
 close all;
