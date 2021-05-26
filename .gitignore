@@ -1,18 +1,21 @@
-# Build and Release Folders
-bin-debug/
-bin-release/
-[Oo]bj/
-[Bb]in/
+# Ignore Following Folders
+Test
+AVL
+Project
+Airfoil_DataBase
 
-# Other files and folders
-.settings/
+# Ignore Exe File
+*.exe
 
-# Executables
-*.swf
-*.air
-*.ipa
-*.apk
+# Ignore Matlab Extensions
+*.asv
 
-# Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
-# should NOT be excluded as they contain compiler settings and other important
-# information for Eclipse / Flash Builder.
+# Ignore Airfoil Files
+*.dat
+
+# Ignore Generated Data
+*.avl
+*.run
+*.err
+*.res
+*.inp
